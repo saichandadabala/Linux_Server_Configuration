@@ -176,3 +176,74 @@ sudo service ssh restart.
  ssh -i filename.pem -p 2200 grader@IPaddress
  
  ```
+ 
+ ## Set the time zone for grader:
+** Configure the local time zone to UTC Logged on grader Account:
+```
+    sudo dpkg-reconfigure tzdata
+
+ ```
+ 
+## Installation Of PostgreSQL and Apache:
+
+**Step 1:** Install apache software as `grader`.
+```
+  sudo apt-get install apache2
+  
+  ```
+**Step 2:** Enter public IP of the `Amazon EC2 `instance into browser (Installation process success or not) --- If success, it displays the `APACHE` PAGE. 
+
+**Step 3:**  Again install library functions of apache
+
+       sudo apt-get install libapache2-mod-wsgi-py3
+**Step 4:** Enable `mod_wsgi `using:
+
+        sudo a2enmod wsgi
+**Step 5:** After enable of `wsgi`, install some libraries of `python development`:
+
+        sudo apt-get install libpq-dev python-dev	
+### Installing and configuration of PostgreSQL:
+
+**Step 6:** Install `postgresql`
+```
+  sudo apt-get install postgresql postgresql-contrib.
+  
+  ```
+**Step 7:** After installing `postgresql,` change to `postgresql` from `grader` user
+```
+		      sudo su - postgres
+	         psql
+            
+```
+**Step 8:** After entering to `psql`
+
+**Create User Catalog :
+```
+
+  CREATE USER catalog WITH PASSWORD 'catalog';
+  ```
+**Step 9:** Now `alter` the user
+```
+	ALTER USER catalog CREATEDB;
+   
+ ```
+**Step 10:** Creating a database:
+
+  create database `catalog` with owner `catalog`;
+  
+**Step 11:** Now change to catalog database:
+```
+    \c catalog
+ ```   
+    
+**Step 1:** Revoking of  all the schemas:
+```
+    REVOKE ALL ON SCHEMA public FROM public;
+```    
+    
+**Step 13:** Now grant all the public schemas to catalog:
+```
+		GRANT ALL ON SCHEMA public TO catalog;
+```      
+**Step 14:** Now `exit `from the database and switch back to the grader user: `exit`
+

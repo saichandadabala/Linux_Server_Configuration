@@ -82,7 +82,7 @@ In this project, I have set up an Ubuntu 18.04 image on a DigitalOcean droplet. 
  ```
  After Proceed with the Option `(Y/N) - Y`
 
-**To check status:
+**To check status:**
 ```
  sudo ufw status
  
@@ -136,7 +136,7 @@ mkdir /home/grader/.ssh
 ```
 su grader
 ```
-- **RUN the command:
+- **RUN the command:**
 ```
   sudo cp /home/ubuntu/.ssh/authorized_keys /home/grader/.ssh/authorized_keys.
  ```
@@ -155,7 +155,7 @@ sudo su usermod -aG sudo grader
 chmod 0700 /home/grader/.ssh/, 
 
 ```
-- *for authorized_keys:
+- *for authorized_keys:*
 ```
 
     chmod 644 authorized_keys
@@ -163,9 +163,9 @@ chmod 0700 /home/grader/.ssh/,
 - Now go to `vi /etc/ssh/ssh_config`. In this you have to edit some authentications.
 Change permit root login no and pubkey authentication yes
 
- **Now save and Exit.
+ **Now save and Exit.**
 
-- **Restart the service:
+- **Restart the service:**
 ```
 
 sudo service ssh restart.
@@ -217,7 +217,7 @@ sudo service ssh restart.
 ```
 **Step 8:** After entering to `psql`
 
-**Create User Catalog :
+**Create User Catalog :**
 ```
 
   CREATE USER catalog WITH PASSWORD 'catalog';
@@ -236,7 +236,7 @@ sudo service ssh restart.
     \c catalog
  ```   
     
-**Step 1:** Revoking of  all the schemas:
+**Step 12:** Revoking of  all the schemas:
 ```
     REVOKE ALL ON SCHEMA public FROM public;
 ```    
@@ -248,6 +248,7 @@ sudo service ssh restart.
 **Step 14:** Now `exit `from the database and switch back to the grader user: `exit`
 
 ## Installation of  Git version control software:
+
 **Step 1:** Install the git
 ```
 sudo apt-get install git
@@ -278,3 +279,136 @@ Fill in the `client_id` and `client_secret` fields in the file `g_client_secrets
 
 These addresses also need to be entered into the Google Developers Console -> API Manager -> Credentials, in the web client under "Authorized JavaScript origins".
  
+## Configuring and Enabling a New Virtual Host:
+```
+sudo nano /etc/apache2/sites-available/Project.conf
+```
+```
+<VirtualHost *:80>
+    ServerName 54.159.20.61.xip.io
+    ServerAlias ec2-54-159-20-61.compute-1.amazonaws.com
+    ServerAdmin ubuntu@54.210.140.47
+    WSGIDaemonProcess catalog python-path=/var/www/catalog:/var/www/catalog/catalog/venv3/lib/python3.6/site-packages
+    WSGIProcessGroup catalog
+    WSGIScriptAlias / /var/www/catalog/catalog.wsgi
+    <Directory /var/www/catalog/catalog/>
+        Order allow,deny
+        Allow from all
+    </Directory>
+    Alias /static /var/www/catalog/catalog/static
+    <Directory /var/www/catalog/catalog/static/>
+        Order allow,deny
+        Allow from all
+    </Directory>
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    LogLevel warn
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+```
+- Enable the virtual host by using the command:
+```
+sudo a2ensite catalog
+
+```
+- After enabling site catalog, to activate the new configuration You need to run:
+```
+sudo service apache2 reload
+```
+## Setting up the Flask Application:
+
+- Create /var/www/catalog/catalog.wsgi file: Add the following lines:
+```
+  import sys
+  import logging
+  logging.basicConfig(stream=sys.stderr)
+  sys.path.insert(0, "/var/www/catalog/")
+  from catalog import app as application
+  application.secret_key = 'supersecretkey'
+  ```
+- Reload and then restart the Apache using:
+```
+
+  sudo service apache2 reload
+  sudo service apache2 restart
+ ```
+- From the *folder* *`var/www/catalog/catalog/`* Create a new virtual Environment.
+```
+  sudo virtualenv -p python venv
+```
+- Change the ownership` permissions `:
+```
+  sudo chown -R grader:grader venv
+ ```
+- Finally, activate virtual environment:
+```
+               . venv/bin/activate
+```
+### *After activating Virtual environment, you need to install the following packages:*
+```
+sudo apt-get install pip3 pip3 install flask pip3 install sqlalchemy pip3 install httplib2 pip3 install requests pip3 install --upgrade oauth2client pip3 install psycopg2-binary sudo apt-get install libpq-dev
+```
+
+*Now all the packages are installed. If not installed with the above commands or got a error that no module found, install with this command:*
+```
+sudo -H pip3 install packagename
+```
+- Disable the default Apache site now:
+```
+sudo a2dissite 000-default.conf
+```
+
+- It returns the following:
+```
+    `Site 000-default disabled`
+    - To activate the new configuration, you need to run:
+      `service apache2 reload`
+    - Reload Apache: `sudo service apache2 reload`
+```
+- You need to edit the `python source file`:
+```
+   sudo vi python __init__.py
+```
+- In the database import statement, add:
+```
+  from catalog.database import *
+
+ Replace xrange() with range()
+
+ At specification of client_secrets.json, replace with /var/www/catalog/catalog/client_secrets.json
+
+```
+- Save the file and  reload `apache`.
+
+- Run database file, sample items file.
+```
+   python database_setup.py
+   python lotsofmenus.py
+```
+- Again reload and restart the apache
+
+- For Security and package updates use these commands.
+```
+  sudo apt-get update
+  sudo apt-get upgrade
+  sudo apt-get dist-upgrade
+```
+## Debugging:
+
+*If you are getting an Internal Server Error or any other error(s), make sure to check out Apache's error log for debugging:*
+```
+$ sudo cat /var/log/apache2/error.log
+```
+- After solving the errors, run application in the web browser:
+```
+  http://54.159.20.61.xip.io
+  http://ec2-54-159-20-61.compute-1.amazonaws.com
+```
+## References:
+```
+[1] https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-18-04
+
+[2] https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps
+
+```
+  

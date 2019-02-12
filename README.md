@@ -14,7 +14,7 @@ In this project, I have set up an Ubuntu 18.04 image on a DigitalOcean droplet. 
 2. **SSH server access port:** 2200
 3. **SSH login username:** grader
 4. **Application URL:** http://54.159.20.61.xip.io
-5. **The Private_Key is:** [Click here]().
+5. **The Private_Key is:** [Click here](https://github.com/saichandadabala/Linux_Server_Configuration/blob/master/private_key).
 
 ## Procedural steps forEstablishing a connection with Amazon EC2:
 
@@ -40,5 +40,66 @@ In this project, I have set up an Ubuntu 18.04 image on a DigitalOcean droplet. 
 
 - Click on `view Launch log` to check whether it is running `successfully`.
   - Now, click on `launch wizard-2` and Click on `Inbound`. In this you must add the rules for incoming connections i.e., add port for SSH (2200), HTTP (80) and NTP (123) and save.
+  
+## Linux Server _Configuration Steps:
+**Step 1:** At first, Create a new folder and place the downloaded `.pem` file in it.
+
+**Step 2:** Open it using Git Bash by the following command:
+
+    ssh -i  filename(linux_server_config.pem) ubuntu@IP address
+    
+**Step 3:**  You need to `update the packages now`.
+```
+  sudo apt-get update
+  sudo apt-get upgrade
+  ```
+**Step 4:** After `updating` the packages, open the file using the following command:
+
+  ```sudo vi /etc/ssh/sshd_config```
  
+ Do some modifications by Changing the port number from ``22`` to ``2200`` and **save it `(Esc and :wq)`** in the file.
  
+ **Step 5:** Restart the service using :
+   ```
+   sudo service ssh restart
+   ```
+   
+**Step6:** Open the file with `ssh port 2200`. It is to check whether the `port 2200` is working or not.
+    
+    ssh -i linux_server_config.pem -p 2200 ubuntu@IP address
+    
+**Step 7:** Now add the following commands to configure the Firewall (UFW):
+```
+ sudo ufw default deny incoming
+ sudo ufw default allow outgoing
+ sudo ufw default allow 2200/TCP
+ sudo ufw default allow www
+ sudo ufw default allow 123/NTP
+ sudo ufw default deny 22
+ 
+ sudo ufw default enable
+ 
+ ```
+ After Proceed with the Option `(Y/N) - Y`
+
+**To check status:
+```
+ sudo ufw status
+ 
+ ```
+ ```
+ To                         Action      From
+--                         ------      ----
+2200/tcp                   ALLOW       Anywhere                  
+80/tcp                     ALLOW       Anywhere                  
+123/udp                    ALLOW       Anywhere                  
+22                         DENY        Anywhere                  
+2200/tcp (v6)              ALLOW       Anywhere (v6)             
+80/tcp (v6)                ALLOW       Anywhere (v6)             
+123/udp (v6)               ALLOW       Anywhere (v6)             
+22 (v6)                    DENY        Anywhere (v6)
+
+```
+_After Completing the above steps,  You need to create a User By following the below steps:
+
+

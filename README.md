@@ -404,11 +404,11 @@ $ sudo cat /var/log/apache2/error.log
   http://54.159.20.61.xip.io
   http://ec2-54-159-20-61.compute-1.amazonaws.com
 ```
-## References:
-```
+## [References]:
+
 [1] https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-18-04
 
 [2] https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps
 
-```
+
   

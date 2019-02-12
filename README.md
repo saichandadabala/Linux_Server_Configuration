@@ -100,6 +100,79 @@ In this project, I have set up an Ubuntu 18.04 image on a DigitalOcean droplet. 
 22 (v6)                    DENY        Anywhere (v6)
 
 ```
-_After Completing the above steps,  You need to create a User By following the below steps:
+*After Completing the above steps,  You need to create a User By following the below steps:*
 
+## Creating a New User `‘grader’`:
 
+- login using Ubuntu user. Now, add user using :
+```
+sudo adduser grader
+
+```
+*Enter the password*
+
+- Now give the grader premissions in the sudoers file:
+``` sudo visudo
+```
+- Edit the file by modifying and adding a new line bleow : `root ALL=(ALL:ALL) ALL`
+```
+ grader  ALL=(ALL:ALL) ALL
+ 
+ ```
+ *This will add the `sudo priviliges ` to `grader`User
+ 
+ - Save and exit using `ctrl+x `and c*onfirm *with `Y.`
+
+- To verify the grader as `sudo permission:`type the below command and enter the *password
+```
+su -grader
+
+```
+- create `SSH key-pair` for `grader`. Cofigure keypairs for `grader`. Create `.ssh` folder by:
+```
+mkdir /home/grader/.ssh
+```
+- Change it to user grader:
+```
+su grader
+```
+- **RUN the command:
+```
+  sudo cp /home/ubuntu/.ssh/authorized_keys /home/grader/.ssh/authorized_keys.
+ ```
+- Now change ownership:
+```
+  chown grader.grader /home/grader/.ssh.\
+ ```
+
+- Now add grader to `sudogroup`. 
+```
+sudo su usermod -aG sudo grader
+```
+
+- change permissions for .ssh folder :
+```
+chmod 0700 /home/grader/.ssh/, 
+
+```
+- *for authorized_keys:
+```
+
+    chmod 644 authorized_keys
+```
+- Now go to `vi /etc/ssh/ssh_config`. In this you have to edit some authentications.
+Change permit root login no and pubkey authentication yes
+
+ **Now save and Exit.
+
+- **Restart the service:
+```
+
+sudo service ssh restart.
+```
+
+- After restarting, open the server with grader:
+```
+ ssh -i filename.pem -p 2200 grader@IPaddress
+ 
+ ```

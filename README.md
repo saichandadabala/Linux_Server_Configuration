@@ -14,6 +14,7 @@ In this project, I have set up an Ubuntu 18.04 image on a DigitalOcean droplet. 
 2. **SSH server access port:** 2200
 3. **SSH login username:** grader
 4. **Application URL:** http://54.159.20.61.xip.io
+5. **The Private_Key is:** [Click here]().
 
 ## Procedural steps forEstablishing a connection with Amazon EC2:
 
@@ -39,3 +40,5 @@ In this project, I have set up an Ubuntu 18.04 image on a DigitalOcean droplet. 
 
 - Click on `view Launch log` to check whether it is running `successfully`.
   - Now, click on `launch wizard-2` and Click on `Inbound`. In this you must add the rules for incoming connections i.e., add port for SSH (2200), HTTP (80) and NTP (123) and save.
+ 
+ 

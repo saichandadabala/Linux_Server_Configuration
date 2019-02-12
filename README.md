@@ -15,7 +15,7 @@ In this project, I have set up an Ubuntu 18.04 image on a DigitalOcean droplet. 
 3. **SSH login username:** grader
 4. **Application URL:** http://54.159.20.61.xip.io
 
-## Procedural steps forEstablisshing a connection with Amazon EC2:
+## Procedural steps forEstablishing a connection with Amazon EC2:
 
 - open your AWS Educate and login to your account.
 

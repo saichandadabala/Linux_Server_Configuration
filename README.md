@@ -247,3 +247,34 @@ sudo service ssh restart.
 ```      
 **Step 14:** Now `exit `from the database and switch back to the grader user: `exit`
 
+## Installation of  Git version control software:
+**Step 1:** Install the git
+```
+sudo apt-get install git
+```
+**Step 2:** Change the directory to www:
+```
+   cd /var/www
+ ```
+**Step 3:**  Clone the git project here:
+```
+ sudo git clone ‘path(https://github.com/saichandadabala/Bike_Models_Catalogue)’.
+```
+**Step 4:** Change the `owner permissions`:
+```
+  sudo chown -R grader:grader catalog
+ ```
+**Step 5:** Rename the `main project file`:
+```
+  sudo mv projectflask.py __init__.py
+```
+**Step 6:** Now in python files, change the database `sqllite` engine to `postgres` engine.
+```
+engine = create_engine('postgresql://catalog:catalog@localhost/catalog')
+```
+
+## Update the Google OAuth client secrets file
+Fill in the `client_id` and `client_secret` fields in the file `g_client_secrets.json`. Also change the javascript_origins field to the `IP address` and `AWS assigned URL of the host`. In this instance that would be: `"javascript_origins":["http://54.159.20.61", "http://ec2-54-159-20-61.compute-1.amazonaws.com"]`
+
+These addresses also need to be entered into the Google Developers Console -> API Manager -> Credentials, in the web client under "Authorized JavaScript origins".
+ 
